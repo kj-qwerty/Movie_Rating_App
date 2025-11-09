@@ -1,0 +1,75 @@
+
+{% extends "base.html" %}
+{% block content %}
+<h2>Analytics: Average Rating per Movie</h2>
+
+{% if labels %}
+<div class="mb-4">
+  <canvas id="ratingsChart" height="120"></canvas>
+</div>
+
+<table class="table table-sm table-striped">
+  <thead>
+    <tr>
+      <th>Movie</th>
+      <th>Average Rating</th>
+      <th>Number of Ratings</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for name in labels %}
+    <tr>
+      <td>{{ name }}</td>
+      <td>{{ "%.2f"|format(avg_values[loop.index0]) }}</td>
+      <td>{{ count_values[loop.index0] }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p>No ratings yet. Add some ratings to see analytics.</p>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+{% if labels %}
+<script>
+  const labels = {{ labels|tojson }};
+  const avgData = {{ avg_values|tojson }};
+  const countData = {{ count_values|tojson }};
+
+  const ctx = document.getElementById('ratingsChart').getContext('2d');
+  const chart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [
+        {
+          label: 'Average Rating',
+          data: avgData,
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          display: true
+        },
+        title: {
+          display: true,
+          text: 'Average Rating per Movie'
+        }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          max: 10
+        }
+      }
+    }
+  });
+</script>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,30 @@
+
+{% extends "base.html" %}
+{% block content %}
+<h2>{{ "Edit Movie" if movie else "New Movie" }}</h2>
+
+<form method="post">
+  <div class="mb-3">
+    <label class="form-label">Title</label>
+    <input class="form-control" name="title" required value="{{ movie.title if movie else '' }}">
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Release Year</label>
+    <input class="form-control" name="release_year" type="number" min="1880" max="2100" value="{{ movie.release_year if movie and movie.release_year else '' }}">
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Genre</label>
+    <input class="form-control" name="genre" value="{{ movie.genre if movie and movie.genre else '' }}">
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Runtime (minutes)</label>
+    <input class="form-control" name="runtime" type="number" min="1" max="600" value="{{ movie.runtime if movie and movie.runtime else '' }}">
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Overview</label>
+    <textarea class="form-control" name="overview" rows="4">{{ movie.overview if movie and movie.overview else '' }}</textarea>
+  </div>
+  <button class="btn btn-primary">Save</button>
+  <a href="{{ url_for('index') }}" class="btn btn-secondary">Cancel</a>
+</form>
+{% endblock %}

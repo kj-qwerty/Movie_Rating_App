@@ -1,0 +1,50 @@
+
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h2>{{ movie.title }}</h2>
+  <div>
+    <a href="{{ url_for('movie_edit', movie_id=movie._id) }}" class="btn btn-secondary btn-sm">Edit Movie</a>
+    <a href="{{ url_for('rating_create') }}?movieId={{ movie._id }}" class="btn btn-primary btn-sm">+ Add Rating</a>
+  </div>
+</div>
+
+<ul class="list-group mb-3">
+  <li class="list-group-item"><strong>Year:</strong> {{ movie.release_year or "-" }}</li>
+  <li class="list-group-item"><strong>Genre:</strong> {{ movie.genre or "-" }}</li>
+  <li class="list-group-item"><strong>Runtime:</strong>
+    {% if movie.runtime %}
+      {{ movie.runtime }} min
+    {% else %}
+      -
+    {% endif %}
+  </li>
+  <li class="list-group-item"><strong>Overview:</strong><br>{{ movie.overview or "-" }}</li>
+</ul>
+
+<h4>Ratings</h4>
+{% if ratings %}
+<table class="table table-sm table-striped">
+  <thead>
+    <tr>
+      <th>User</th>
+      <th>Rating</th>
+      <th>Timestamp</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for r in ratings %}
+    <tr>
+      <td>{{ r.userId }}</td>
+      <td>{{ "%.1f"|format(r.rating) }}</td>
+      <td>{{ r.timestamp.strftime("%Y-%m-%d %H:%M") if r.timestamp else "-" }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p>No ratings yet for this movie.</p>
+{% endif %}
+
+<a href="{{ url_for('index') }}" class="btn btn-secondary mt-3">Back to Movies</a>
+{% endblock %}
